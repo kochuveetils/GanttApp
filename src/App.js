@@ -1,25 +1,44 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+import Timeline from './components/TimelineGantt';
+import Header from './components/HeaderComponent';
+import Footer from './components/FooterComponent';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { fetchDuties } from './redux/ActionCreators';
+
+const mapStateToProps = state => {
+  return {
+    duties: state.duties
+  }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => ({
+  fetchDuties: (dutyfilter) => { dispatch(fetchDuties(dutyfilter)) }
+});
+
+class App extends React.Component {
+
+  componentDidMount() {
+    console.log('componentDidMount APP')
+    localStorage.removeItem('rundates');
+    this.props.fetchDuties();
+    // this.interval = setInterval(this.getTimeline, 10000); // <- time in ms
+  }
+  render() {
+    console.log('Render APP')
+    return (
+      <div>
+        <Header
+          duties={this.props.duties}
+          fetchDuties={this.props.fetchDuties} />
+        <Timeline duties={this.props.duties} fetchDuties={this.props.fetchDuties} />
+        {/* <Footer /> */}
+      </div>
+    );
+  }
+}
+
+// export default App;
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
