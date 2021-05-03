@@ -6,7 +6,7 @@ import {
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { Loading } from './LoadingComponent';
-import { refreshinterval } from '../baseUrl';
+import { refreshinterval, refresh } from '../baseUrl';
 
 // import ErrorBoundary from './ErrorBoundary';
 
@@ -65,15 +65,17 @@ class Header extends Component {
             "m": minutes,
             "s": seconds
         };
-        console.log(obj)
+        // console.log(obj)
         return obj;
     }
 
     startTimer = () => {
         // alert(this.state.timer)
         // alert(this.state.seconds)
-        if (this.state.timer == 0 && this.state.seconds > 0) {
-            this.timer = setInterval(this.countDown, 1000);
+        if (refresh) {
+            if (this.state.timer == 0 && this.state.seconds > 0) {
+                this.timer = setInterval(this.countDown, 1000);
+            }
         }
     }
 
@@ -344,7 +346,7 @@ class Header extends Component {
     }
 
     setStartValues = ({ isLoading, errMess, duties }) => {
-        console.log('HEADER:Inside setStartValues ' + this.state.strdate)
+        // console.log('HEADER:Inside setStartValues ' + this.state.strdate)
         if (isLoading) {
             return (
                 <span>Start: {this.state.strdate}</span>
@@ -362,7 +364,7 @@ class Header extends Component {
                 )
             }
             else {
-                console.log(duties.length)
+                // console.log(duties.length)
                 return (
                     (duties.length === 0) ? <span>Start: {this.state.strdate}</span> : <span>Start: {duties[0].runstrdate}</span>
                 )
@@ -372,7 +374,7 @@ class Header extends Component {
     }
 
     setEndValues = ({ isLoading, errMess, duties }) => {
-        console.log('Inside setEndValues')
+        // console.log('Inside setEndValues')
         if (isLoading) {
             return (
                 <span>End: {this.state.enddate}</span>
@@ -391,7 +393,7 @@ class Header extends Component {
                 )
             }
             else {
-                console.log(duties.length)
+                // console.log(duties.length)
                 return (
                     (duties.length === 0) ? <span>End: {this.state.enddate}</span> : <span>End: {duties[0].runenddate}</span>
                 )
@@ -408,7 +410,7 @@ class Header extends Component {
     }
 
     render() {
-        console.log('Render HEADER ' + this.props.duties.duties.length);
+        // console.log('Render HEADER ' + this.props.duties.duties.length);
         return (
             <React.Fragment>
 
@@ -488,16 +490,21 @@ class Header extends Component {
                                 <NavItem className="nav-button">
                                     <Button onClick={() => this.clearFilter()} color="warning">Clear Filter</Button>
                                 </NavItem>
-                                <NavItem className="nav-button">
-                                    {this.state.refreshstatus ?
-                                        <Button onClick={() => this.stopInterval()} color="danger">Stop Refresh</Button>
-                                        :
-                                        <Button onClick={() => this.startInterval()} color="info">Start Refresh</Button>
-                                    }
-                                </NavItem>
-                                <NavItem className="nav-text">
-                                    <span style={{ color: (this.state.seconds < 10) ? 'red' : 'yellow' }}>Ref in m: {this.state.time.m} s: {this.state.time.s}</span>
-                                </NavItem>
+                                {refresh ?
+                                    <NavItem className="nav-button">
+                                        {this.state.refreshstatus ?
+                                            <Button onClick={() => this.stopInterval()} color="danger">Stop Refresh</Button>
+                                            :
+                                            <Button onClick={() => this.startInterval()} color="info">Start Refresh</Button>
+                                        }
+                                    </NavItem>
+                                    : <></>}
+
+                                {refresh ?
+                                    <NavItem className="nav-text">
+                                        <span style={{ color: (this.state.seconds < 10) ? 'red' : 'yellow' }}>Refresh in {this.state.time.m}m {this.state.time.s}s</span>
+                                    </NavItem>
+                                    : <></>}
                             </Nav>
                         </Collapse>
                     </div>

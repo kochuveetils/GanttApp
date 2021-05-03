@@ -91,3 +91,53 @@ export const fetchDuties = (dutyfilter) => (dispatch) => {
         .then(duties => dispatch(addDuties(duties)))
         .catch(error => dispatch(dutiesFailed(error.message)));
 };
+
+export const sectorsLoading = () => ({
+    type: ActionTypes.SECTOR_LOADING
+});
+
+export const sectorsFailed = (errmess) => ({
+    type: ActionTypes.SECTOR_FAILED,
+    payload: errmess
+});
+
+export const addSectors = (sectors) => ({
+    type: ActionTypes.ADD_SECTOR,
+    payload: sectors
+});
+
+export const fetchSectors = (sectorfilter) => (dispatch) => {
+    console.log('Sector filter in fetchSectors');
+    console.log(sectorfilter);
+
+
+    dispatch(sectorsLoading(true));
+    console.log('Before fetching Sector are');
+    var reqstring = baseUrl + 'duty?seriesnum=' + sectorfilter?.seriesnum + '&dutyseqnum=' + sectorfilter?.dutyseqnum;
+
+    return fetch(reqstring)
+        .then(response => {
+            if (response.ok) {
+                return response;
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+            error => {
+                var errmess = new Error(error.message);
+                throw errmess;
+            })
+        .then(response => response.json())
+        .then(sectors => {
+            console.log('Gantt Sectors are');
+            console.log(sectors);
+            return sectors;
+
+            // dispatch(addDuties(datarowsarray));
+        })
+        .then(sectors => dispatch(addSectors(sectors)))
+        .catch(error => dispatch(sectorsFailed(error.message)));
+};

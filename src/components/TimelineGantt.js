@@ -4,10 +4,13 @@ import Chart from "react-google-charts";
 import { options, datatablerows, datatablecols, illegalcolor, dutytypemap } from '../baseUrl';
 // import { Row, Col } from 'reactstrap';
 import { Loading } from './LoadingComponent';
+import {
+    Col, Row
+} from 'reactstrap';
 
 import {
     Button, Modal, ModalHeader, ModalBody,
-    Form, FormGroup, Input, Label
+    Form, FormGroup, Input, Label, Table
 } from 'reactstrap';
 
 
@@ -75,6 +78,7 @@ import {
 class Timeline extends React.Component {
     state = {
         isDutyOpen: false,
+        isSectorOpen: false,
         dutydetails: {}
     };
 
@@ -209,7 +213,8 @@ class Timeline extends React.Component {
 
     toggleDutyModal = () => {
         this.setState({
-            isDutyOpen: !this.state.isDutyOpen
+            isDutyOpen: !this.state.isDutyOpen,
+            isSectorOpen: false
         });
     }
 
@@ -218,6 +223,58 @@ class Timeline extends React.Component {
         this.setState({
             dutydetails: dutyval
         });
+    }
+
+    toggleSector = (series, dutyseq) => {
+        this.setState({
+            isSectorOpen: !this.state.isSectorOpen
+        });
+        if (!this.state.isSectorOpen)
+            this.props.fetchSectors({ seriesnum: series, dutyseqnum: dutyseq });
+    }
+
+    showDuties = (sectors) => {
+        if (sectors.isLoading) {
+            return (
+                <Loading />
+            );
+        }
+        else if (sectors.errMess) {
+            return (
+                <tr>
+                    <td>{sectors.errMess}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            );
+        }
+        else if (sectors.sectors.length > 0) {
+            return (
+                sectors.sectors.map((sectors) => {
+                    return (
+                        <tr key={sectors.dutyseqnum}>
+                            <td className="sectordetail">{sectors.sectorstart}</td>
+                            <td className="sectordetail">{sectors.sectorend}</td>
+                            <td className="sectordetail">{sectors.flight}</td>
+                            <td className="sectordetail">{sectors.dutycd}</td>
+                            <td className="sectordetail">{sectors.sector}</td>
+                        </tr>
+                    )
+                })
+            );
+        }
+        else {
+            return (
+                <tr>
+                    <td>Trip:No data found</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            )
+        }
+
     }
 
     createCustomHTMLContent = (signon, actfdp, maxfdp, sector) => {
@@ -287,7 +344,7 @@ class Timeline extends React.Component {
                             dutytypemap.filter((dutymap) => (dutymap.dutytype === duty.dutytype))[0].color
                         ) : illegalcolor,
                         // (duty.legal === 'L') ? legalcolor : illegalcolor,                        
-                        duty.maxfdp + (duty.dutyattribute ? duty.dutyattribute : '') + '_' + duty.actfdp + '_' + duty.restbef + '_' + duty.legal + '_' + duty.acclmstatus + '_' + duty.lastacclport + '_' + duty.sectorcount + '_' + duty.sector,
+                        duty.maxfdp + (duty.dutyattribute ? duty.dutyattribute : '') + '_' + duty.actfdp + '_' + duty.restbef + '_' + duty.legal + '_' + duty.acclmstatus + '_' + duty.lastacclport + '_' + duty.sectorcount + '_' + duty.sector + '_' + duty.seriesnum + '_' + duty.dutyseqnum,
                         this.createCustomHTMLContent(duty.signonbne, duty.actfdp, duty.maxfdp + (duty.dutyattribute ? duty.dutyattribute : ''), duty.sector),
                         new Date(Date.parse(duty.signonbne)),
                         new Date(Date.parse(duty.signoffbne))
@@ -321,14 +378,20 @@ class Timeline extends React.Component {
                     />
 
                     <Modal isOpen={this.state.isDutyOpen} toggle={this.toggleDutyModal}>
-                        <ModalHeader toggle={this.toggleDutyModal}>Duty Details</ModalHeader>
+                        <ModalHeader className="bg-secondary text-white" toggle={this.toggleDutyModal}>
+                            Duty Details
+                               <Button style={{ marginLeft: "20px" }} color={"warning"} onClick={() => this.toggleSector(this.state.dutydetails.fdp.split('_')[8], this.state.dutydetails.fdp.split('_')[9])}>
+                                {this.state.isSectorOpen ? 'Hide Duty Details' : 'Show Duty Details'}</Button>
+
+
+                        </ModalHeader>
                         <ModalBody>
                             <Form onSubmit={this.toggleDutyModal}>
                                 <dl className="row p-1">
                                     <dt className="col-6">Staff</dt>
                                     <dd className="col-6">{this.state.dutydetails.staff}</dd>
                                     <dt className="col-6">Series</dt>
-                                    <dd className="col-6">{this.state.dutydetails.seriesnum}</dd>
+                                    <dd className="col-6">{this.state.dutydetails.fdp ? this.state.dutydetails.fdp.split('_')[8] + ' D:' + this.state.dutydetails.fdp.split('_')[9] : ''}</dd>
                                     <dt className="col-6">Duty Start</dt>
                                     {/* <dd className="col-6">{Date.parse(this.state.dutydetails.signonbne)}</dd> */}
                                     <dd className="col-6">{new Intl.DateTimeFormat("en-GB", {
@@ -374,8 +437,27 @@ class Timeline extends React.Component {
                                     <dd className="col-6">{this.state.dutydetails.fdp ? this.state.dutydetails.fdp.split('_')[1] : this.state.dutydetails.fdp}</dd>
                                     <dt className="col-6">FDP Legal</dt>
                                     <dd className="col-6" style={{ color: this.state.dutydetails.fdp ? (this.state.dutydetails.fdp.split('_')[3] === 'L') ? 'blue' : 'red' : 'black' }}>{this.state.dutydetails.fdp ? ((this.state.dutydetails.fdp.split('_')[3] === 'L') ? 'LEGAL' : 'ILLEGAL') : this.state.dutydetails.fdp}</dd>
-
                                 </dl>
+
+                                {(this.state.isSectorOpen) ?
+                                    <Table responsive striped bordered size="sm">
+                                        <thead>
+                                            <tr className="bg-secondary text-white">
+                                                <th>Start</th>
+                                                <th>End</th>
+                                                <th>Flight</th>
+                                                <th>Duty</th>
+                                                <th>Sector</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {this.showDuties(this.props.sectors)}
+
+                                        </tbody>
+                                    </Table>
+                                    : <div></div>
+                                }
+
                             </Form>
                         </ModalBody>
                     </Modal>

@@ -6,16 +6,18 @@ import Footer from './components/FooterComponent';
 
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchDuties } from './redux/ActionCreators';
+import { fetchDuties, fetchSectors } from './redux/ActionCreators';
 
 const mapStateToProps = state => {
   return {
-    duties: state.duties
+    duties: state.duties,
+    sectors: state.sectors
   }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchDuties: (dutyfilter) => { dispatch(fetchDuties(dutyfilter)) }
+  fetchDuties: (dutyfilter) => { dispatch(fetchDuties(dutyfilter)) },
+  fetchSectors: (sectorfilter) => { dispatch(fetchSectors(sectorfilter)) }
 });
 
 class App extends React.Component {
@@ -33,7 +35,7 @@ class App extends React.Component {
         <Header
           duties={this.props.duties}
           fetchDuties={this.props.fetchDuties} />
-        <Timeline duties={this.props.duties} fetchDuties={this.props.fetchDuties} />
+        <Timeline duties={this.props.duties} fetchDuties={this.props.fetchDuties} sectors={this.props.sectors} fetchSectors={this.props.fetchSectors} />
         {/* <Footer /> */}
       </div>
     );

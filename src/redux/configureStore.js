@@ -1,5 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Duties } from './duty';
+import { Sectors } from './sector';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 // import { InitialFeedback } from './forms';
@@ -12,6 +13,7 @@ export default function configureStore() {
     const store = createStore(
         combineReducers({
             duties: Duties,
+            sectors: Sectors,
             // credits: Credits,
             // headlines: Headlines,
             // weather: Weather,
