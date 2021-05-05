@@ -73,7 +73,12 @@ margin: 0px 0px;
 }
 
 .title-gantt{
-  color:#e8f53a;  
+  color:#c973eb;  
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 150%;
+  font-style: oblique;
+  /* color:#e8f53a;   */
   padding:0px 10px;
 }
 
@@ -82,14 +87,30 @@ padding: 0px 10px;
 }
 
 .nav-text{
-color: white;
+color:ivory;
+font-size: 80%;
 }
+
+.nav-refresh{
+  color:ivory;
+  font-size: 75%;
+  }
+
+.nav-display{
+  color:#c1dbdb;
+  font-size: 75%;
+  }
 
 .navbar-dark {
   /* background-color: #512DA8; */
   /* background-color:#8c3131; */
   background-color:#535157;
 }
+
+/* .button-header{
+  height:30px;
+  size: 75%;
+} */
 
 .page-enter {
   opacity: 0.01;

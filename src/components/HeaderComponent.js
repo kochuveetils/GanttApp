@@ -348,8 +348,8 @@ class Header extends Component {
     setStartValues = ({ isLoading, errMess, duties }) => {
         // console.log('HEADER:Inside setStartValues ' + this.state.strdate)
         if (isLoading) {
-            return (
-                <span>Start: {this.state.strdate}</span>
+            return (<>
+                <span>Start: </span><span>{this.state.strdate}</span></>
             );
         }
         else if (errMess) {
@@ -359,14 +359,14 @@ class Header extends Component {
         }
         else {
             if (this.state.strdate) {
-                return (
-                    <span>Start: {this.state.strdate}</span>
+                return (<>
+                    <span>Start: </span><span>{this.state.strdate}</span></>
                 )
             }
             else {
                 // console.log(duties.length)
                 return (
-                    (duties.length === 0) ? <span>Start: {this.state.strdate}</span> : <span>Start: {duties[0].runstrdate}</span>
+                    (duties.length === 0) ? <><span className="nav-text">Start: </span><span className="nav-display">{this.state.strdate}</span></> : <><span className="nav-text">Start: </span><span className="nav-display">{duties[0].runstrdate}</span></>
                 )
             }
 
@@ -376,8 +376,8 @@ class Header extends Component {
     setEndValues = ({ isLoading, errMess, duties }) => {
         // console.log('Inside setEndValues')
         if (isLoading) {
-            return (
-                <span>End: {this.state.enddate}</span>
+            return (<>
+                <span>End: </span><span>{this.state.enddate}</span></>
             );
         }
         else if (errMess) {
@@ -388,14 +388,14 @@ class Header extends Component {
         else {
 
             if (this.state.enddate) {
-                return (
-                    <span>End: {this.state.enddate}</span>
+                return (<>
+                    <span>End: </span><span>{this.state.enddate}</span></>
                 )
             }
             else {
                 // console.log(duties.length)
                 return (
-                    (duties.length === 0) ? <span>End: {this.state.enddate}</span> : <span>End: {duties[0].runenddate}</span>
+                    (duties.length === 0) ? <><span className="nav-text">End: </span><span className="nav-display">{this.state.enddate}</span></> : <><span className="nav-text">End: </span><span className="nav-display">{duties[0].runenddate}</span></>
                 )
             }
         }
@@ -407,6 +407,11 @@ class Header extends Component {
             strdate: (this.props.duties.duties.length === 0) ? this.state.strdate : this.props.duties.duties[0].runstrdate,
             enddate: (this.props.duties.duties.length === 0) ? this.state.enddate : this.props.duties.duties[0].runenddate
         });
+    }
+
+    showdate = (ddate) => {
+        var dddate = new Date(ddate);
+        return dddate.getHours() + ':' + dddate.getMinutes()
     }
 
     render() {
@@ -423,9 +428,9 @@ class Header extends Component {
                         </NavbarBrand>
                         <Collapse isOpen={this.state.isNavOpen} navbar>
                             <Nav navbar>
-                                <NavItem className="title-gantt">
+                                <NavItem>
                                     {/* <h3>FDP Gantt</h3> */}
-                                    <h5>FLIGHT CREW FDP GANTT</h5>
+                                    <h5 className="title-gantt">FLIGHT CREW FDP GANTT</h5>
                                     {/* <h4>Flight Crew FDP Gantt</h4> */}
                                 </NavItem>
                                 {/* <NavItem>
@@ -450,61 +455,71 @@ class Header extends Component {
                                 </NavItem> */}
                             </Nav>
                             <Nav className="ml-auto" navbar>
-                                <NavItem className="nav-text">
-                                    <span>{this.state.legality ? 'Showing All Duties' : 'Showing Illegal Duties'}</span>
+                                <NavItem>
+                                    <span style={{ color: (this.state.legality) ? 'yellow' : 'red' }}>{this.state.legality ? 'Showing All Duties' : 'Showing Illegal Duties'}</span>
                                 </NavItem>
                             </Nav>
                             <Nav className="ml-auto" navbar>
-                                <NavItem className="nav-text">
+                                <NavItem>
                                     {this.setStartValues(this.props.duties)}
                                     {/* <span>Start: {this.state.strdate}</span> */}
                                 </NavItem>
                             </Nav>
                             <Nav className="ml-auto" navbar>
-                                <NavItem className="nav-text">
+                                <NavItem >
                                     {this.setEndValues(this.props.duties)}
                                     {/* <span>End: {this.state.enddate}</span> */}
                                 </NavItem>
                             </Nav>
                             <Nav className="ml-auto" navbar>
-                                <NavItem className="nav-text">
-                                    <span>Contract: {this.state.contract}</span>
+                                <NavItem >
+                                    <span className="nav-text">Contract: </span><span className="nav-display">{this.state.contract}</span>
                                 </NavItem>
                             </Nav>
                             <Nav className="ml-auto" navbar>
-                                <NavItem className="nav-text">
-                                    <span>Base: {this.state.base}</span>
+                                <NavItem >
+                                    <span className="nav-text">Base: </span><span className="nav-display">{this.state.base}</span>
                                 </NavItem>
                             </Nav>
                             <Nav className="ml-auto" navbar>
-                                <NavItem className="nav-text">
-                                    <span>Rank: {this.state.rank}</span>
+                                <NavItem>
+                                    <span className="nav-text">Rank: </span><span className="nav-display">{this.state.rank}</span>
                                 </NavItem>
                             </Nav>
                             <Nav className="ml-auto" navbar>
 
                                 <NavItem className="nav-button">
-                                    <Button color="primary" onClick={this.toggleModal} > <span className="fa fa-search fa-lg"></span> Filter Gantt</Button>
+                                    <Button className="button-header" color="primary" onClick={this.toggleModal} > <span className="fa fa-search fa-lg"></span> Filter Gantt</Button>
 
                                 </NavItem>
                                 <NavItem className="nav-button">
-                                    <Button onClick={() => this.clearFilter()} color="warning">Clear Filter</Button>
+                                    <Button className="button-header" onClick={() => this.clearFilter()} color="warning">Clear Filter</Button>
                                 </NavItem>
                                 {refresh ?
                                     <NavItem className="nav-button">
                                         {this.state.refreshstatus ?
-                                            <Button onClick={() => this.stopInterval()} color="danger">Stop Refresh</Button>
+                                            <Button className="button-header" onClick={() => this.stopInterval()} color="danger">Stop Refresh</Button>
                                             :
-                                            <Button onClick={() => this.startInterval()} color="info">Start Refresh</Button>
+                                            <Button className="button-header" onClick={() => this.startInterval()} color="info">Start Refresh</Button>
                                         }
                                     </NavItem>
                                     : <></>}
 
-                                {refresh ?
-                                    <NavItem className="nav-text">
-                                        <span style={{ color: (this.state.seconds < 10) ? 'red' : 'yellow' }}>Refresh in {this.state.time.m}m {this.state.time.s}s</span>
-                                    </NavItem>
-                                    : <></>}
+
+                                <NavItem className="nav-refresh">
+                                    {refresh ?
+                                        <span style={{ color: (this.state.seconds < 15) ? (this.state.seconds % 2) ? 'red' : 'yellow' : '#b2fa2d' }}>Refresh {this.state.time.m}m {this.state.time.s}s</span>
+                                        : <></>}
+                                    <div style={{ color: '#c1dbdb' }}>Updated as {(this.props.duties.duties.length > 0) ?
+                                        this.showdate(this.props.duties.duties[0].runtime)
+                                        : ''}</div>
+                                </NavItem>
+
+                                {/* <NavItem className="nav-text">
+                                    <span style={{ color: 'yellow' }}>Last Refresh {(this.props.duties.duties.length > 0) ?
+                                        this.showdate(this.props.duties.duties[0].runtime)
+                                        : ''}</span>
+                                </NavItem> */}
                             </Nav>
                         </Collapse>
                     </div>

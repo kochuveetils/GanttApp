@@ -3,13 +3,21 @@ export const refresh = true;
 export const refreshinterval = 90;
 
 export const options = {
-    // timeline: { showBarLabels: false },
+    timeline: {
+        rowLabelStyle: {
+            fontName: 'Helvetica',
+            fontSize: 15,
+            color: '#603913'
+        }
+    },
     // allowHtml: false,
     tooltip: {
         isHtml: true,
         trigger: 'focus'
     },
-    backgroundColor: '#ffd',
+    backgroundColor: '#e8e7e3',
+    // backgroundColor: '#ffd',
+
     // barLabelStyle: { fontName: 'Garamond', fontSize: 14 },
 };
 
@@ -18,9 +26,9 @@ export const legalcolor = 'green';
 export const illegalcolor = 'red';
 
 export const dutytypemap = [
-    { color: '#35DBF4', dutytype: 'FLY' },
+    { color: '#00cefc', dutytype: 'FLY' },
     { color: '#F435B9 ', dutytype: 'TVL' },
-    { color: '#F4B32B', dutytype: 'GRD' },
+    { color: '#fca400', dutytype: 'GRD' },
     { color: '#1FAB42 ', dutytype: 'SBY' },
     { color: '#F8F22B ', dutytype: 'LVE' },
     { color: '#2BF88B', dutytype: 'DDO' }
