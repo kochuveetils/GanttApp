@@ -22,14 +22,40 @@ export const fetchDuties = (dutyfilter) => (dispatch) => {
 
 
     console.log(dutyfilter?.contract)
+    console.log('Buffer UNDER ' + dutyfilter?.bufferunder);
+    if (dutyfilter?.bufferunder) {
+        console.log('BUFFER DEFINED')
+    }
+    else {
+        console.log('BUFFER UNNNNDEFINED')
+    }
     dispatch(dutiesLoading(true));
     console.log('Before fetching gantt are');
     var reqstring = ''
-    if (dutyfilter?.staffnum) {
-        reqstring = baseUrl + 'gantt?staff=' + dutyfilter?.staffnum + '&legality=' + dutyfilter?.legality;
+    if (dutyfilter?.staffnum && dutyfilter.bufferunder != 0) {
+        if (dutyfilter?.bufferunder) {
+            console.log('BUFFER DEFINED')
+            reqstring = baseUrl + 'gantt?staff=' + dutyfilter?.staffnum + '&legality=' + 'true';
+        }
+        else {
+            console.log('BUFFER UNNNNDEFINED')
+            reqstring = baseUrl + 'gantt?staff=' + dutyfilter?.staffnum + '&legality=' + dutyfilter?.legality;
+        }
+
+        // reqstring = baseUrl + 'gantt?staff=' + dutyfilter?.staffnum + '&legality=' + dutyfilter?.legality;
     }
     else {
-        reqstring = baseUrl + 'gantt?enddate=' + dutyfilter?.enddate + '&strdate=' + dutyfilter?.strdate + '&contract_cd=' + dutyfilter?.contract + '&base=' + dutyfilter?.base + '&rank_cd=' + dutyfilter?.rank + '&legality=' + dutyfilter?.legality;
+
+        if (dutyfilter?.bufferunder && dutyfilter.bufferunder != 0) {
+            console.log('BUFFER DEFINED')
+            reqstring = baseUrl + 'gantt?enddate=' + dutyfilter?.enddate + '&strdate=' + dutyfilter?.strdate + '&contract_cd=' + dutyfilter?.contract + '&base=' + dutyfilter?.base + '&rank_cd=' + dutyfilter?.rank + '&legality=' + 'true';
+        }
+        else {
+            console.log('BUFFER UNNNNDEFINED')
+            reqstring = baseUrl + 'gantt?enddate=' + dutyfilter?.enddate + '&strdate=' + dutyfilter?.strdate + '&contract_cd=' + dutyfilter?.contract + '&base=' + dutyfilter?.base + '&rank_cd=' + dutyfilter?.rank + '&legality=' + dutyfilter?.legality;
+        }
+
+        // reqstring = baseUrl + 'gantt?enddate=' + dutyfilter?.enddate + '&strdate=' + dutyfilter?.strdate + '&contract_cd=' + dutyfilter?.contract + '&base=' + dutyfilter?.base + '&rank_cd=' + dutyfilter?.rank + '&legality=' + dutyfilter?.legality;
     }
 
 
@@ -84,7 +110,68 @@ export const fetchDuties = (dutyfilter) => (dispatch) => {
             // );
             // console.log('duties fetched from');
             // console.log(duties);
-            return duties;
+            var dutyarray = [];
+            if (dutyfilter?.bufferunder && dutyfilter.bufferunder != 0) {
+                console.log('BUFFER, Checking with buffer on duties');
+                dutyarray = duties.map((duty) => {
+
+                    if (duty.maxfdp != '9999') {
+                        duty.fdpbufferunder = (duty.maxfdp * ((100 - dutyfilter.bufferunder) / 100)).toFixed(2);
+                        if (duty.maxfdp * ((100 - dutyfilter.bufferunder) / 100) < duty.actfdp) {
+                            duty.legal = 'I';
+                        }
+                    }
+                    else
+                        duty.fdpbufferunder = duty.maxfdp;
+
+                    // if (duty.maxfdp * ((100 - dutyfilter.bufferunder) / 100) < duty.actfdp) {
+                    //     duty.fdpbufferunder = (duty.maxfdp * ((100 - dutyfilter.bufferunder) / 100)).toFixed(2);
+                    //     duty.legal = 'I';
+                    // }
+                    // else {
+                    //     // duty.bufferunder = dutyfilter.bufferunder;
+                    //     if (duty.maxfdp != '9999')
+                    //         duty.fdpbufferunder = (duty.maxfdp * ((100 - dutyfilter.bufferunder) / 100)).toFixed(2);
+                    //     else
+                    //         duty.fdpbufferunder = duty.maxfdp;
+                    // }
+                    return duty;
+                }
+                )
+            }
+            else {
+                console.log('No BUFFER, passing duties');
+                dutyarray = duties;
+            }
+
+            if (dutyfilter?.bufferunder && dutyfilter.bufferunder != 0) {
+                if (dutyfilter?.legality) {
+                    return dutyarray;
+                }
+                else {
+                    var dutyarrayillegal = dutyarray.filter((duty) => (duty.legal === 'I' || duty.legal === 'E'));
+                    console.log('dutyarrayillegal')
+                    console.log(dutyarrayillegal)
+                    const dutyunique = [];
+                    const map = new Map();
+                    for (const item of dutyarrayillegal) {
+                        if (!map.has(item.staff)) {
+                            map.set(item.staff, true);    // set any value to Map
+                            dutyunique.push(item.staff);
+                        }
+                    }
+                    console.log('Unique')
+                    console.log(dutyunique);
+
+                    return dutyarray.filter((duty) => (dutyunique.includes(duty.staff)));
+                    // return dutyarrayillegal;
+
+                }
+            }
+            else {
+                return dutyarray;
+            }
+            // return duties;
 
             // dispatch(addDuties(datarowsarray));
         })

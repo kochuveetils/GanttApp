@@ -24,6 +24,7 @@ class Header extends Component {
             rank: 'ALL',
             base: 'ALL',
             legality: false,
+            bufferunder: 0,
             staffnum: '',
             refreshcounter: 0,
             refreshstatus: true,
@@ -95,7 +96,8 @@ class Header extends Component {
                 contract: this.state.contract,
                 base: this.state.base,
                 rank: this.state.rank,
-                legality: this.state.legality
+                legality: this.state.legality,
+                bufferunder: this.state.bufferunder
             });
             let seconds = refreshinterval;
             let timer = 0;
@@ -196,7 +198,8 @@ class Header extends Component {
                 // alert('End' + this.state.enddate)
                 this.props.fetchDuties({
                     staffnum: this.state.staffnum,
-                    legality: this.state.legality
+                    legality: this.state.legality,
+                    bufferunder: this.state.bufferunder
                 });
                 this.toggleModal();
             }
@@ -262,7 +265,8 @@ class Header extends Component {
                     contract: this.state.contract,
                     base: this.state.base,
                     rank: this.state.rank,
-                    legality: this.state.legality
+                    legality: this.state.legality,
+                    bufferunder: this.state.bufferunder
                 });
                 this.toggleModal();
             }
@@ -301,7 +305,8 @@ class Header extends Component {
             contract: 'ALL',
             rank: 'ALL',
             base: 'ALL',
-            legality: false
+            legality: false,
+            bufferunder: 0
         });
 
         // this.state.staffnum = '';
@@ -487,6 +492,11 @@ class Header extends Component {
                                 </NavItem>
                             </Nav>
                             <Nav className="ml-auto" navbar>
+                                <NavItem>
+                                    <span className="nav-text">Buffer: </span><span className="nav-display">{this.state.bufferunder}%</span>
+                                </NavItem>
+                            </Nav>
+                            <Nav className="ml-auto" navbar>
 
                                 <NavItem className="nav-button">
                                     <Button className="button-header" color="primary" onClick={this.toggleModal} > <span className="fa fa-search fa-lg"></span> Filter Gantt</Button>
@@ -643,6 +653,22 @@ class Header extends Component {
                                             Display All Duties
                                         </Label>
                                     </FormGroup>
+                                </Col>
+                                <Col md={3}>
+                                    <Label htmlFor="bufferunder">FDP Buffer%</Label>
+                                </Col>
+                                <Col>
+
+                                    <Input type="select" bsSize="sm" id="bufferunder" name="bufferunder" placeholder="FDP Buffer" value={this.state.bufferunder}
+                                        onChange={this.handleInputChange}
+                                        innerRef={(input) => this.bufferunder = input} >
+                                        <option>0</option>
+                                        <option>2</option>
+                                        <option>5</option>
+                                        <option>7</option>
+                                        <option>10</option>
+                                    </Input>
+
                                 </Col>
                             </Row>
                             {/* <Row className="form-group">

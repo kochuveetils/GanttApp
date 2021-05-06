@@ -277,7 +277,7 @@ class Timeline extends React.Component {
 
     }
 
-    createCustomHTMLContent = (signon, actfdp, maxfdp, sector) => {
+    createCustomHTMLContent = (signon, actfdp, maxfdp, sector, fdpbufferunder) => {
         var sday = new Intl.DateTimeFormat("en-GB", {
             // year: "numeric",
             month: "short",
@@ -293,25 +293,49 @@ class Timeline extends React.Component {
             minute: "2-digit"
         }).format(Date.parse(signon));
 
-        return '<div style="padding:5px 0px 5px 0px;">' +
-            '<table class="medals_layout">'
-            + '<tr>'
-            + '<td><b>Sign: </b>' + sday + '</td>'
-            + '</tr>'
-            // + '<tr>'
-            // + '<td><b>Sign: </b>' + son + '</td>'
-            // + '</tr>'
-            + '<tr>'
-            + '<td><b>Duty: </b>' + sector + '</td>'
-            + '</tr>'
-            + '<tr>'
-            + '<td><b>FDP: </b>' + actfdp + '</td>'
-            + '</tr>'
-            + '<tr>'
-            + '<td><b>Max: </b>' + maxfdp + '</td>'
-            + '</tr>'
-            + '</table>'
-            + '</div>';
+        if (fdpbufferunder)
+            return '<div style="padding:5px 0px 5px 0px;">' +
+                '<table class="medals_layout">'
+                + '<tr>'
+                + '<td><b>Sign: </b>' + sday + '</td>'
+                + '</tr>'
+                // + '<tr>'
+                // + '<td><b>Sign: </b>' + son + '</td>'
+                // + '</tr>'
+                + '<tr>'
+                + '<td><b>Duty: </b>' + sector + '</td>'
+                + '</tr>'
+                + '<tr>'
+                + '<td><b>FDP: </b>' + actfdp + '</td>'
+                + '</tr>'
+                + '<tr>'
+                + '<td><b>Max: </b>' + maxfdp + '</td>'
+                + '</tr>'
+                + '<tr>'
+                + '<td><b>Buffer: </b>' + fdpbufferunder + '</td>'
+                + '</tr>'
+                + '</table>'
+                + '</div>';
+        else
+            return '<div style="padding:5px 0px 5px 0px;">' +
+                '<table class="medals_layout">'
+                + '<tr>'
+                + '<td><b>Sign: </b>' + sday + '</td>'
+                + '</tr>'
+                // + '<tr>'
+                // + '<td><b>Sign: </b>' + son + '</td>'
+                // + '</tr>'
+                + '<tr>'
+                + '<td><b>Duty: </b>' + sector + '</td>'
+                + '</tr>'
+                + '<tr>'
+                + '<td><b>FDP: </b>' + actfdp + '</td>'
+                + '</tr>'
+                + '<tr>'
+                + '<td><b>Max: </b>' + maxfdp + '</td>'
+                + '</tr>'
+                + '</table>'
+                + '</div>';
     }
 
 
@@ -344,8 +368,8 @@ class Timeline extends React.Component {
                             dutytypemap.filter((dutymap) => (dutymap.dutytype === duty.dutytype))[0].color
                         ) : illegalcolor,
                         // (duty.legal === 'L') ? legalcolor : illegalcolor,                        
-                        duty.maxfdp + (duty.dutyattribute ? duty.dutyattribute : '') + '_' + duty.actfdp + '_' + duty.restbef + '_' + duty.legal + '_' + duty.acclmstatus + '_' + duty.lastacclport + '_' + duty.sectorcount + '_' + duty.sector + '_' + duty.seriesnum + '_' + duty.dutyseqnum,
-                        this.createCustomHTMLContent(duty.signonbne, duty.actfdp, duty.maxfdp + (duty.dutyattribute ? duty.dutyattribute : ''), duty.sector),
+                        duty.maxfdp + (duty.dutyattribute ? duty.dutyattribute : '') + '_' + duty.actfdp + '_' + duty.restbef + '_' + duty.legal + '_' + duty.acclmstatus + '_' + duty.lastacclport + '_' + duty.sectorcount + '_' + duty.sector + '_' + duty.seriesnum + '_' + duty.dutyseqnum + '_' + duty?.fdpbufferunder,
+                        this.createCustomHTMLContent(duty.signonbne, duty.actfdp, duty.maxfdp + (duty.dutyattribute ? duty.dutyattribute : ''), duty.sector, (duty?.fdpbufferunder)),
                         new Date(Date.parse(duty.signonbne)),
                         new Date(Date.parse(duty.signoffbne))
                     ]
@@ -433,6 +457,8 @@ class Timeline extends React.Component {
                                     <dd className="col-6">{this.state.dutydetails.fdp ? this.state.dutydetails.fdp.split('_')[6] : this.state.dutydetails.fdp}</dd>
                                     <dt className="col-6">Max FDP</dt>
                                     <dd className="col-6">{this.state.dutydetails.fdp ? this.state.dutydetails.fdp.split('_')[0] : this.state.dutydetails.fdp}</dd>
+                                    <dt className="col-6">Max FDP with BUFFER</dt>
+                                    <dd className="col-6">{this.state.dutydetails.fdp ? (this.state.dutydetails.fdp.split('_')[10] != 'undefined') ? this.state.dutydetails.fdp.split('_')[10] : 'N/A' : this.state.dutydetails.fdp}</dd>
                                     <dt className="col-6">Actual FDP</dt>
                                     <dd className="col-6">{this.state.dutydetails.fdp ? this.state.dutydetails.fdp.split('_')[1] : this.state.dutydetails.fdp}</dd>
                                     <dt className="col-6">FDP Legal</dt>
