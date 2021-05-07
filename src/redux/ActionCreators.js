@@ -1,6 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 // import { baseUrl } from '../baseUrl';
-import { baseUrl, illegalcolor, dutytypemap } from '../baseUrl';
+import { baseUrl } from '../baseUrl';
 
 export const dutiesLoading = () => ({
     type: ActionTypes.DUTY_LOADING
@@ -32,7 +32,7 @@ export const fetchDuties = (dutyfilter) => (dispatch) => {
     dispatch(dutiesLoading(true));
     console.log('Before fetching gantt are');
     var reqstring = ''
-    if (dutyfilter?.staffnum && dutyfilter.bufferunder != 0) {
+    if (dutyfilter?.staffnum && Number(dutyfilter.bufferunder) !== 0) {
         if (dutyfilter?.bufferunder) {
             console.log('BUFFER DEFINED')
             reqstring = baseUrl + 'gantt?staff=' + dutyfilter?.staffnum + '&legality=' + 'true';
@@ -46,7 +46,7 @@ export const fetchDuties = (dutyfilter) => (dispatch) => {
     }
     else {
 
-        if (dutyfilter?.bufferunder && dutyfilter.bufferunder != 0) {
+        if (dutyfilter?.bufferunder && Number(dutyfilter.bufferunder) !== 0) {
             console.log('BUFFER DEFINED')
             reqstring = baseUrl + 'gantt?enddate=' + dutyfilter?.enddate + '&strdate=' + dutyfilter?.strdate + '&contract_cd=' + dutyfilter?.contract + '&base=' + dutyfilter?.base + '&rank_cd=' + dutyfilter?.rank + '&legality=' + 'true';
         }
@@ -111,13 +111,15 @@ export const fetchDuties = (dutyfilter) => (dispatch) => {
             // console.log('duties fetched from');
             // console.log(duties);
             var dutyarray = [];
-            if (dutyfilter?.bufferunder && dutyfilter.bufferunder != 0) {
+            if (dutyfilter?.bufferunder && Number(dutyfilter.bufferunder) !== 0) {
                 console.log('BUFFER, Checking with buffer on duties');
                 dutyarray = duties.map((duty) => {
 
-                    if (duty.maxfdp != '9999') {
+                    if (duty.maxfdp !== '9999') {
                         duty.fdpbufferunder = (duty.maxfdp * ((100 - dutyfilter.bufferunder) / 100)).toFixed(2);
                         if (duty.maxfdp * ((100 - dutyfilter.bufferunder) / 100) < duty.actfdp) {
+                            if (duty.legal !== 'I')
+                                duty.buffer = 'U';
                             duty.legal = 'I';
                         }
                     }
@@ -144,7 +146,7 @@ export const fetchDuties = (dutyfilter) => (dispatch) => {
                 dutyarray = duties;
             }
 
-            if (dutyfilter?.bufferunder && dutyfilter.bufferunder != 0) {
+            if (dutyfilter?.bufferunder && Number(dutyfilter.bufferunder) !== 0) {
                 if (dutyfilter?.legality) {
                     return dutyarray;
                 }

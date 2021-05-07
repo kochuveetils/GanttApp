@@ -74,7 +74,7 @@ class Header extends Component {
         // alert(this.state.timer)
         // alert(this.state.seconds)
         if (refresh) {
-            if (this.state.timer == 0 && this.state.seconds > 0) {
+            if (this.state.timer === 0 && this.state.seconds > 0) {
                 this.timer = setInterval(this.countDown, 1000);
             }
         }
@@ -88,7 +88,7 @@ class Header extends Component {
             seconds: seconds,
         });
 
-        if (seconds == 0) {
+        if (seconds === 0) {
             // this.timer = 0;
             this.props.fetchDuties({
                 strdate: this.state.strdate,

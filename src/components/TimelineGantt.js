@@ -1,16 +1,13 @@
 import '../App.css';
 import React from 'react';
 import Chart from "react-google-charts";
-import { options, datatablerows, datatablecols, illegalcolor, dutytypemap } from '../baseUrl';
+import { timeconvmmss, options, illegalbundercolor, datatablecols, illegalcolor, dutytypemap } from '../baseUrl';
 // import { Row, Col } from 'reactstrap';
 import { Loading } from './LoadingComponent';
-import {
-    Col, Row
-} from 'reactstrap';
 
 import {
     Button, Modal, ModalHeader, ModalBody,
-    Form, FormGroup, Input, Label, Table
+    Form, Table
 } from 'reactstrap';
 
 
@@ -285,13 +282,13 @@ class Timeline extends React.Component {
             hour: "2-digit",
             minute: "2-digit"
         }).format(Date.parse(signon));
-        var son = new Intl.DateTimeFormat("en-GB", {
-            // year: "numeric",
-            // month: "short",
-            // day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit"
-        }).format(Date.parse(signon));
+        // var son = new Intl.DateTimeFormat("en-GB", {
+        //     year: "numeric",
+        //     month: "short",
+        //     day: "2-digit",
+        //     hour: "2-digit",
+        //     minute: "2-digit"
+        // }).format(Date.parse(signon));
 
         if (fdpbufferunder)
             return '<div style="padding:5px 0px 5px 0px;">' +
@@ -366,10 +363,11 @@ class Timeline extends React.Component {
                         // dutytypemap.filter((dutymap) => (dutymap.dutytype === duty.dutytype))[0].color,
                         (duty.legal === 'L') ? (
                             dutytypemap.filter((dutymap) => (dutymap.dutytype === duty.dutytype))[0].color
-                        ) : illegalcolor,
+                        ) : ((duty.buffer === 'U') ? illegalbundercolor : illegalcolor),
                         // (duty.legal === 'L') ? legalcolor : illegalcolor,                        
                         duty.maxfdp + (duty.dutyattribute ? duty.dutyattribute : '') + '_' + duty.actfdp + '_' + duty.restbef + '_' + duty.legal + '_' + duty.acclmstatus + '_' + duty.lastacclport + '_' + duty.sectorcount + '_' + duty.sector + '_' + duty.seriesnum + '_' + duty.dutyseqnum + '_' + duty?.fdpbufferunder,
-                        this.createCustomHTMLContent(duty.signonbne, duty.actfdp, duty.maxfdp + (duty.dutyattribute ? duty.dutyattribute : ''), duty.sector, (duty?.fdpbufferunder)),
+                        this.createCustomHTMLContent(duty.signonbne, timeconvmmss(duty.actfdp), timeconvmmss(duty.maxfdp) + (duty.dutyattribute ? duty.dutyattribute : ''), duty.sector, (duty?.fdpbufferunder ? timeconvmmss(duty.fdpbufferunder) : duty?.fdpbufferunder)),
+                        // this.createCustomHTMLContent(duty.signonbne, timeconvmmss(duty.actfdp), timeconvmmss(duty.maxfdp) + (duty.dutyattribute ? duty.dutyattribute : ''), duty.sector, (duty?.fdpbufferunder)),
                         new Date(Date.parse(duty.signonbne)),
                         new Date(Date.parse(duty.signoffbne))
                     ]
@@ -452,15 +450,15 @@ class Timeline extends React.Component {
                                     <dt className="col-6">Last Accl Port</dt>
                                     <dd className="col-6">{this.state.dutydetails.fdp ? this.state.dutydetails.fdp.split('_')[5] : this.state.dutydetails.fdp}</dd>
                                     <dt className="col-6">Rest Before</dt>
-                                    <dd className="col-6">{this.state.dutydetails.fdp ? this.state.dutydetails.fdp.split('_')[2] : this.state.dutydetails.fdp}</dd>
+                                    <dd className="col-6">{this.state.dutydetails.fdp ? timeconvmmss(this.state.dutydetails.fdp.split('_')[2]) : this.state.dutydetails.fdp}</dd>
                                     <dt className="col-6">Sectors</dt>
                                     <dd className="col-6">{this.state.dutydetails.fdp ? this.state.dutydetails.fdp.split('_')[6] : this.state.dutydetails.fdp}</dd>
                                     <dt className="col-6">Max FDP</dt>
-                                    <dd className="col-6">{this.state.dutydetails.fdp ? this.state.dutydetails.fdp.split('_')[0] : this.state.dutydetails.fdp}</dd>
+                                    <dd className="col-6">{this.state.dutydetails.fdp ? timeconvmmss(this.state.dutydetails.fdp.split('_')[0]) : this.state.dutydetails.fdp}</dd>
                                     <dt className="col-6">Max FDP with BUFFER</dt>
-                                    <dd className="col-6">{this.state.dutydetails.fdp ? (this.state.dutydetails.fdp.split('_')[10] != 'undefined') ? this.state.dutydetails.fdp.split('_')[10] : 'N/A' : this.state.dutydetails.fdp}</dd>
+                                    <dd className="col-6">{this.state.dutydetails.fdp ? (this.state.dutydetails.fdp.split('_')[10] !== 'undefined') ? timeconvmmss(this.state.dutydetails.fdp.split('_')[10]) : 'N/A' : this.state.dutydetails.fdp}</dd>
                                     <dt className="col-6">Actual FDP</dt>
-                                    <dd className="col-6">{this.state.dutydetails.fdp ? this.state.dutydetails.fdp.split('_')[1] : this.state.dutydetails.fdp}</dd>
+                                    <dd className="col-6">{this.state.dutydetails.fdp ? timeconvmmss(this.state.dutydetails.fdp.split('_')[1]) : this.state.dutydetails.fdp}</dd>
                                     <dt className="col-6">FDP Legal</dt>
                                     <dd className="col-6" style={{ color: this.state.dutydetails.fdp ? (this.state.dutydetails.fdp.split('_')[3] === 'L') ? 'blue' : 'red' : 'black' }}>{this.state.dutydetails.fdp ? ((this.state.dutydetails.fdp.split('_')[3] === 'L') ? 'LEGAL' : 'ILLEGAL') : this.state.dutydetails.fdp}</dd>
                                 </dl>

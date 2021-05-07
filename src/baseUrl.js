@@ -10,6 +10,24 @@ export const options = {
             color: '#603913'
         }
     },
+    hAxis: {
+        format: 'dMMM',
+        // format: 'M/d/yy',
+        // gridlines: {
+        //     count: -1,
+        //     units: {
+        //         days: { format: ['ddMM'] },
+        //         hours: { format: ['HH:mm', 'ha'] },
+        //     }
+        // }
+    },
+    // gridlines: {
+    //     count: -1,
+    //     units: {
+    //         days: { format: ['MMM dd'] },
+    //         hours: { format: ['HH:mm', 'ha'] },
+    //     }
+    // },
     // allowHtml: false,
     tooltip: {
         isHtml: true,
@@ -24,6 +42,7 @@ export const options = {
 export const legalcolor = 'green';
 // export const illegalcolor = '#F82B46';
 export const illegalcolor = 'red';
+export const illegalbundercolor = '#f78395';
 
 export const dutytypemap = [
     { color: '#00cefc', dutytype: 'FLY' },
@@ -56,6 +75,14 @@ export const datatablecols1 =
         { type: 'date', id: 'Start' },
         { type: 'date', id: 'End' }
     ];
+
+
+export const timeconvmmss = (minutes) => {
+    var sign = minutes < 0 ? "-" : "";
+    var min = Math.floor(Math.abs(minutes));
+    var sec = Math.round((Math.abs(minutes) * 60) % 60);
+    return sign + (min < 10 ? "0" : "") + min + ":" + (sec < 10 ? "0" : "") + sec;
+}
 
 
 
