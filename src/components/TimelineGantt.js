@@ -356,7 +356,7 @@ class Timeline extends React.Component {
                     [
                         // duty.staff + '-' + duty.firstname,
                         duty.staff + '-' + duty.firstname + '-' + duty.base + duty.rank,
-                        duty.acclmstatus,
+                        duty.acclmstatus + ((duty?.currdate) ? ((duty.currdate === '*') ? duty.currdate : '') : ''),
                         // duty.seriesnum + '-' + duty.dutycategory,
                         // null,
                         // duty.dutycategory,

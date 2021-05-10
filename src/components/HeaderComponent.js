@@ -354,7 +354,7 @@ class Header extends Component {
         // console.log('HEADER:Inside setStartValues ' + this.state.strdate)
         if (isLoading) {
             return (<>
-                <span>Start: </span><span>{this.state.strdate}</span></>
+                <span className="nav-text">Start: </span><span className="nav-display">{this.state.strdate}</span></>
             );
         }
         else if (errMess) {
@@ -365,7 +365,7 @@ class Header extends Component {
         else {
             if (this.state.strdate) {
                 return (<>
-                    <span>Start: </span><span>{this.state.strdate}</span></>
+                    <span className="nav-text">Start: </span><span className="nav-display">{this.state.strdate}</span></>
                 )
             }
             else {
@@ -382,7 +382,7 @@ class Header extends Component {
         // console.log('Inside setEndValues')
         if (isLoading) {
             return (<>
-                <span>End: </span><span>{this.state.enddate}</span></>
+                <span className="nav-text">End: </span><span className="nav-display">{this.state.enddate}</span></>
             );
         }
         else if (errMess) {
@@ -394,7 +394,7 @@ class Header extends Component {
 
             if (this.state.enddate) {
                 return (<>
-                    <span>End: </span><span>{this.state.enddate}</span></>
+                    <span className="nav-text">End: </span><span className="nav-display">{this.state.enddate}</span></>
                 )
             }
             else {
@@ -663,7 +663,10 @@ class Header extends Component {
                                         onChange={this.handleInputChange}
                                         innerRef={(input) => this.bufferunder = input} >
                                         <option>0</option>
+                                        <option>1</option>
                                         <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
                                         <option>5</option>
                                         <option>7</option>
                                         <option>10</option>

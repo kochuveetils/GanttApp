@@ -11,7 +11,7 @@ export const options = {
         }
     },
     hAxis: {
-        format: 'dMMM',
+        // format: 'dMMM',
         // format: 'M/d/yy',
         // gridlines: {
         //     count: -1,
