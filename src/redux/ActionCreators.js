@@ -32,8 +32,9 @@ export const fetchDuties = (dutyfilter) => (dispatch) => {
     dispatch(dutiesLoading(true));
     console.log('Before fetching gantt are');
     var reqstring = ''
-    if (dutyfilter?.staffnum && Number(dutyfilter.bufferunder) !== 0) {
-        if (dutyfilter?.bufferunder) {
+    // if (dutyfilter?.staffnum && Number(dutyfilter.bufferunder) !== 0) {
+    if (dutyfilter?.staffnum) {
+        if (dutyfilter?.bufferunder || Number(dutyfilter.bufferunder) !== 0) {
             console.log('BUFFER DEFINED')
             reqstring = baseUrl + 'gantt?staff=' + dutyfilter?.staffnum + '&legality=' + 'true';
         }
@@ -86,7 +87,8 @@ export const fetchDuties = (dutyfilter) => (dispatch) => {
                 console.log('Empty Duty Filter')
                 localStorage.setItem('rundates', JSON.stringify({
                     runstrdate: (duties.length === 0) ? '' : duties[0].runstrdate,
-                    runenddate: (duties.length === 0) ? '' : duties[0].runenddate
+                    runenddate: (duties.length === 0) ? '' : duties[0].runenddate,
+                    ruleapp: (duties.length === 0) ? '' : duties[0].ruleapp
                 }));
             }
 

@@ -356,7 +356,8 @@ class Timeline extends React.Component {
                     [
                         // duty.staff + '-' + duty.firstname,
                         duty.staff + '-' + duty.firstname + '-' + duty.base + duty.rank,
-                        duty.acclmstatus + ((duty?.currdate) ? ((duty.currdate === '*') ? duty.currdate : '') : ''),
+                        // duty.acclmstatus + ((duty?.currdate) ? ((duty.currdate === '*') ? duty.currdate : '') : ''),
+                        duty.acclmstatus + (duty.dutyattribute ? duty.dutyattribute : ''),
                         // duty.seriesnum + '-' + duty.dutycategory,
                         // null,
                         // duty.dutycategory,
@@ -365,7 +366,7 @@ class Timeline extends React.Component {
                             dutytypemap.filter((dutymap) => (dutymap.dutytype === duty.dutytype))[0].color
                         ) : ((duty.buffer === 'U') ? illegalbundercolor : illegalcolor),
                         // (duty.legal === 'L') ? legalcolor : illegalcolor,                        
-                        duty.maxfdp + (duty.dutyattribute ? duty.dutyattribute : '') + '_' + duty.actfdp + '_' + duty.restbef + '_' + duty.legal + '_' + duty.acclmstatus + '_' + duty.lastacclport + '_' + duty.sectorcount + '_' + duty.sector + '_' + duty.seriesnum + '_' + duty.dutyseqnum + '_' + duty?.fdpbufferunder,
+                        duty.maxfdp  + '_' + duty.actfdp + '_' + duty.restbef + '_' + duty.legal + '_' + duty.acclmstatus + '_' + duty.lastacclport + '_' + duty.sectorcount + '_' + duty.sector + '_' + duty.seriesnum + '_' + duty.dutyseqnum + '_' + duty?.fdpbufferunder+'_'+(duty.dutyattribute ? duty.dutyattribute : ''),
                         this.createCustomHTMLContent(duty.signonbne, timeconvmmss(duty.actfdp), timeconvmmss(duty.maxfdp) + (duty.dutyattribute ? duty.dutyattribute : ''), duty.sector, (duty?.fdpbufferunder ? timeconvmmss(duty.fdpbufferunder) : duty?.fdpbufferunder)),
                         // this.createCustomHTMLContent(duty.signonbne, timeconvmmss(duty.actfdp), timeconvmmss(duty.maxfdp) + (duty.dutyattribute ? duty.dutyattribute : ''), duty.sector, (duty?.fdpbufferunder)),
                         new Date(Date.parse(duty.signonbne)),
@@ -453,7 +454,10 @@ class Timeline extends React.Component {
                                     <dd className="col-6">{this.state.dutydetails.fdp ? timeconvmmss(this.state.dutydetails.fdp.split('_')[2]) : this.state.dutydetails.fdp}</dd>
                                     <dt className="col-6">Sectors</dt>
                                     <dd className="col-6">{this.state.dutydetails.fdp ? this.state.dutydetails.fdp.split('_')[6] : this.state.dutydetails.fdp}</dd>
+                                    <dt className="col-6">Duty Attribute</dt>
+                                    <dd className="col-6">{this.state.dutydetails.fdp ? this.state.dutydetails.fdp.split('_')[11] : this.state.dutydetails.fdp}</dd>
                                     <dt className="col-6">Max FDP</dt>
+                                    {/* <dd className="col-6">{this.state.dutydetails.fdp ? this.state.dutydetails.fdp.split('_')[0] : this.state.dutydetails.fdp}</dd> */}
                                     <dd className="col-6">{this.state.dutydetails.fdp ? timeconvmmss(this.state.dutydetails.fdp.split('_')[0]) : this.state.dutydetails.fdp}</dd>
                                     <dt className="col-6">Max FDP with BUFFER</dt>
                                     <dd className="col-6">{this.state.dutydetails.fdp ? (this.state.dutydetails.fdp.split('_')[10] !== 'undefined') ? timeconvmmss(this.state.dutydetails.fdp.split('_')[10]) : 'N/A' : this.state.dutydetails.fdp}</dd>
