@@ -1,5 +1,5 @@
 export const baseUrl = 'http://localhost:3000/';
-export const refresh = true;
+export const refresh = false;
 export const refreshinterval = 90;
 
 export const options = {

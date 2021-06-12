@@ -87,10 +87,9 @@ export const fetchDuties = (dutyfilter) => (dispatch) => {
                 console.log('Empty Duty Filter')
                 localStorage.setItem('rundates', JSON.stringify({
                     runstrdate: (duties.length === 0) ? '' : duties[0].runstrdate,
-                    runenddate: (duties.length === 0) ? '' : duties[0].runenddate,
-                    ruleapp: (duties.length === 0) ? '' : duties[0].ruleapp
+                    runenddate: (duties.length === 0) ? '' : duties[0].runenddate
                 }));
-            }
+            }     
 
             // const datarowsarray = duties.map(
             //     (duty) => (

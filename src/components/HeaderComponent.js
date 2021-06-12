@@ -435,7 +435,7 @@ class Header extends Component {
                             <Nav navbar>
                                 <NavItem>
                                     {/* <h3>FDP Gantt</h3> */}
-                                    <h5 className="title-gantt">FLIGHT CREW FDP GANTT</h5>
+                                    <h5 className="title-gantt">FLIGHT CREW FDP GANTT {(this.props.duties.duties.length>0)?this.props.duties.duties[0].ruleapp:''}</h5>
                                     {/* <h4>Flight Crew FDP Gantt</h4> */}
                                 </NavItem>
                                 {/* <NavItem>
